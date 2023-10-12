@@ -74,34 +74,34 @@ ckan.module('ioos_theme_daterange', function($) {
         $('input#ext_max_depth').val(param_ext_max_depth);
     }
 
-    //$('a[name="datefilter"]').daterangepicker({
-    //timePicker24Hour: true,
-    //startDate: moment().startOf('hour'),
-    //endDate: moment().startOf('hour').add(32, 'hour'),
-    //locale: {
-    //  format: 'YYYY-MM-DDTHH:mm\\Z'
-    //},
-    //timePicker: true
-    //});
+    $('a[name="datefilter"]').daterangepicker({
+    timePicker24Hour: true,
+    startDate: moment().startOf('hour'),
+    endDate: moment().startOf('hour').add(32, 'hour'),
+    locale: {
+     format: 'YYYY-MM-DDTHH:mm\\Z'
+    },
+    timePicker: true
+    });
 
-    //// set ISO-like date on range selection
-    //$('a[name="datefilter"]').on('apply.daterangepicker',
-    //                               function(ev, picker) {
-    //                                   $('input[name="ext_timerange_start"]').val(picker.startDate.format('YYYY-MM-DDTHH:mm') + "Z");
-    //                                   $('input[name="ext_timerange_end"]').val(picker.endDate.format('YYYY-MM-DDTHH:mm') + "Z");
-    //                                   /* setting .val doesn't fire the
-    //                                    * on change handler, so we need to
-    //                                    * call the function directly. */
-    //                                   make_daterange();
-    //                                   /* submit the form after selecting dates
-    //                                    * to make behavior consistent with
-    //                                    * other widgets */
-    //                                   form.submit();
-    //                               });
-    //$.validator.setDefaults({
-    //  debug: true,
-    //  success: "valid"
-    //});
+    // set ISO-like date on range selection
+    $('a[name="datefilter"]').on('apply.daterangepicker',
+                                  function(ev, picker) {
+                                      $('input[name="ext_timerange_start"]').val(picker.startDate.format('YYYY-MM-DDTHH:mm') + "Z");
+                                      $('input[name="ext_timerange_end"]').val(picker.endDate.format('YYYY-MM-DDTHH:mm') + "Z");
+                                      /* setting .val doesn't fire the
+                                       * on change handler, so we need to
+                                       * call the function directly. */
+                                      make_daterange();
+                                      /* submit the form after selecting dates
+                                       * to make behavior consistent with
+                                       * other widgets */
+                                      form.submit();
+                                  });
+    $.validator.setDefaults({
+     debug: true,
+     success: "valid"
+    });
 
   function comparator(pred_fn) {
     return function(value, element, param) {
@@ -169,12 +169,12 @@ ckan.module('ioos_theme_daterange', function($) {
   make_daterange();
 
   // clear data selection on cancel
-  //$('a[name="datefilter"]').on('cancel.daterangepicker',
-  //                                 function(ev, picker) {
-  //                                     $('input[name="ext_timerange_start"]').val('');
-  //                                     $('input[name="ext_timerange_end"]').val('');
-  //                                     make_daterange();
-  //                                 });
+  $('a[name="datefilter"]').on('cancel.daterangepicker',
+                                  function(ev, picker) {
+                                      $('input[name="ext_timerange_start"]').val('');
+                                      $('input[name="ext_timerange_end"]').val('');
+                                      make_daterange();
+                                  });
 
   for (name of ["ext_timerange_start", "ext_timerange_end", "ext_min", "ext_max"]) {
       $('input[name="' + name + '"]').on('change', make_daterange);
