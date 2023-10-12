@@ -96,7 +96,7 @@ ckan.module('ioos_theme_daterange', function($) {
                                       /* submit the form after selecting dates
                                        * to make behavior consistent with
                                        * other widgets */
-                                      form.submit();
+                                      // form.submit();
                                   });
     $.validator.setDefaults({
      debug: true,
