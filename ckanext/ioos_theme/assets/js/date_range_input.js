@@ -45,29 +45,19 @@ function make_daterange() {
 ckan.module('ioos_theme_daterange', function ($) {
   return {
     initialize: function () {
-
-      console.log('init function')
-
       // toggle date info popover
       $('[data-toggle="popover"]').popover({ placement: 'bottom', html: true });
-      var form = $(".search-form");
-      $(['ext_timerange_start', 'ext_timerange_end',
-        'ext_min_depth', 'ext_max_depth']).each(function (index, item) {
-          var time_elem = $("#" + item);
-          if (time_elem.length === 0) {
-            $('<input type="hidden" />').attr({
-              'id': item,
-              'name': item
-            }).appendTo(form);
-          }
-        });
 
-      console.log('location')
-      console.log(location)
+      var form = $(".search-form");
+      $(['ext_timerange_start', 'ext_timerange_end', 'ext_min_depth', 'ext_max_depth']).each(function (index, item) {
+        $('<input type="hidden" />').attr({
+          'id': item,
+          'name': item
+        }).appendTo(form);
+      });
+
       var search_params = new URLSearchParams(location.search);
 
-      console.log('search_params')
-      console.log(search_params)
       var param_start_time = search_params.get('ext_timerange_start');
       if (param_start_time !== null) {
         $('input#ext_timerange_start').val(param_start_time);
@@ -77,11 +67,11 @@ ckan.module('ioos_theme_daterange', function ($) {
         $('input#ext_timerange_end').val(param_end_time);
       }
       var param_ext_min_depth = search_params.get('ext_min_depth');
-      if (param_start_time !== null) {
+      if (param_ext_min_depth !== null) {
         $('input#ext_min_depth').val(param_ext_min_depth);
       }
       var param_ext_max_depth = search_params.get('ext_max_depth');
-      if (param_start_time !== null) {
+      if (param_ext_max_depth !== null) {
         $('input#ext_max_depth').val(param_ext_max_depth);
       }
 
@@ -187,12 +177,18 @@ ckan.module('ioos_theme_daterange', function ($) {
           make_daterange();
         });
 
-      for (name of ["ext_timerange_start", "ext_timerange_end", "ext_min", "ext_max"]) {
+      for (name of ["ext_timerange_start", "ext_timerange_end", "ext_min_depth", "ext_max_depth"]) {
         $('input[name="' + name + '"]').on('change', make_daterange);
       }
 
-      // submit the updated form when the Apply button is clicked
-      $(this.el).find('.btn.apply').click(function () { form.submit() });
+      $(this.el).find('.btn.apply').off('click');
+
+      // Updated event listener for the .btn.apply click
+      $(this.el).find('.btn.apply').click(function (event) {
+        event.preventDefault();
+        form.submit();
+      });
+
       $('form[name="datetime-selection"]').on('reset', function () {
         $('input#ext_timerange_start').remove();
         $('input#ext_timerange_end').remove();
@@ -200,8 +196,7 @@ ckan.module('ioos_theme_daterange', function ($) {
          * event has fired by pushing
          * onto the event stack */
         window.setTimeout(function () {
-          make_daterange();
-          form.submit();
+          make_daterange(); form.submit();
         }, 0);
       });
     }
