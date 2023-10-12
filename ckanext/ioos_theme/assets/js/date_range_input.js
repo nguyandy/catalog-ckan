@@ -47,7 +47,7 @@ ckan.module('ioos_theme_daterange', function($) {
         initialize: function() {
   // toggle date info popover
   $('[data-toggle="popover"]').popover({placement: 'bottom', html: true});
-  var form = $(".search-form");
+  var form = date_form
   $(['ext_timerange_start', 'ext_timerange_end',
      'ext_min_depth', 'ext_max_depth']).each(function(index, item) {
     var time_elem = $("#" + item);
