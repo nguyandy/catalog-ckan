@@ -8,9 +8,6 @@ function make_daterange() {
   let date_form = $('form[name="datetime-selection"]');
   let form_btn = date_form.find(".btn.apply");
 
-  let start_val = $('input#ext_timerange_start').val() || null;
-  let end_val = $('input#ext_timerange_end').val() || null;
-
   date_form.validate();
   form_btn.attr('disabled', !date_form.valid());
 
