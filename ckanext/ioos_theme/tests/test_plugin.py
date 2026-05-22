@@ -37,16 +37,16 @@ class TestIOOSPlugin(TestCase):
                         """
         negative_oob_split = plugin.split_geometry_antimeridian(None,
                                                                 over_triangle)
-        min_lon, _, max_lon _ shapely.from_geojson(negative_oob_geom.bounds)
-        assert min_lon = -180 and max_lon = 180
+        min_lon, _, max_lon, _ = shapely.from_geojson(negative_oob_geom.bounds)
+        assert min_lon == -180 and max_lon == 180
         # shift far eastward
         positive_oob = json.dumps(shapely.geometry.mapping(
                                  shapely.affinity.translate(shapely.from_geojson(over_triangle),
                                                   360)))
         positive_oob_split = plugin.split_geometry_antimeridian(None,
                                                                 positive_oob)
-        min_lon, _, max_lon _ = shapely.from_geojson(positive_oob_split)
-        assert min_lon = -180 and max_lon = 180
+        min_lon, _, max_lon, _ = shapely.from_geojson(positive_oob_split)
+        assert min_lon == -180 and max_lon == 180
 
     def test_split_gcmd_tags(self):
         """
