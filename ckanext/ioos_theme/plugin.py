@@ -182,7 +182,18 @@ def convert_date(date_val, check_datetime=False, date_to_datetime=False):
             raise ValueError("Value is not datetime")
         return '*'
     else:
-        d_raw = pendulum.parsing.parse_iso8601(date_val.strip())
+        stripped_date = date_val.strip()
+        # Year only is valid ISO 8601 date, but the
+        # pendulum.parsing.parse_iso8601() method fails on these,
+        # so handle separately.
+        #
+        if re.fullmatch(r"[+-]?\d{4,}", stripped_date):
+            # In Solr a + prefix means years after 9999 CE,
+            # which is not the same as ISO 8601's interpretation,
+            # so strip off any leading plus sign if present.
+            return stripped_date.lstrip("+")
+
+        d_raw = pendulum.parsing.parse_iso8601(stripped_date)
         if (check_datetime and not isinstance(d_raw, datetime.datetime) and
             not date_to_datetime):
             raise ValueError("Value is not datetime")
