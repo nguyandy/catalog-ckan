@@ -1,6 +1,6 @@
 """Tests for plugin.py."""
 from unittest import TestCase
-import ckanext.ioos_theme.plugin as plugin
+from ckanext.ioos_theme import plugin
 import json
 import shapely
 import shapely.affinity
@@ -104,3 +104,33 @@ class TestIOOSPlugin(TestCase):
         self.assertEqual([generate_tag_dict(t) for t in ['AUV', 'Glider']],
                           plugin.filter_tag_names(all_tags, cf_standard_names,
                                                   gcmd_kws))
+    def test_convert_date(self):
+        # None and '*' should return '*'
+        self.assertEqual(plugin.convert_date(None), '*')
+        self.assertEqual(plugin.convert_date('*'), '*')
+
+        # Year only, with and without plus sign
+        self.assertEqual(plugin.convert_date('2020'), '2020')
+        self.assertEqual(plugin.convert_date('+2020'), '2020')
+        self.assertEqual(plugin.convert_date('-2020'), '-2020')
+
+        # ISO date
+        self.assertEqual(plugin.convert_date('2020-05-01'), '2020-05-01')
+
+        # ISO datetime (no microseconds)
+        dt_str = '2020-05-01T12:34:56Z'
+        result = plugin.convert_date(dt_str)
+        self.assertTrue(result.startswith('2020-05-01T12:34:56'))
+
+        # ISO datetime with microseconds (should be truncated)
+        dt_micro = '2020-05-01T12:34:56.123456Z'
+        result = plugin.convert_date(dt_micro)
+        self.assertTrue(result.startswith('2020-05-01T12:34:56'))
+
+        # check_datetime=True with date string should raise ValueError
+        with self.assertRaises(ValueError):
+            plugin.convert_date('2020-05-01', check_datetime=True)
+
+        # date_to_datetime=True should convert date to datetime string
+        dt = plugin.convert_date('2020-05-01', date_to_datetime=True)
+        self.assertIn('T00:00:00', dt)
